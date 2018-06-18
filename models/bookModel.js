@@ -11,4 +11,4 @@ var bookModel = new Schema({
 	read: {type: Boolean, default: false}
 });
 
-module.exports = mongoose.model('Book', bookModel);
+module.exports = mongoose.model("Book", bookModel);

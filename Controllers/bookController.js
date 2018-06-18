@@ -1,4 +1,4 @@
-var httpstatus = require('http-status-codes');
+var httpstatus = require("http-status-codes");
 
 var bookConroller = function(Book) {
 	var get = function(req, res) {
@@ -20,15 +20,26 @@ var bookConroller = function(Book) {
 	};
 	var post = function(req, res) {
 		var book = new Book(req.body);
-		book.save(function(err) {
+		if (!req.body.title) {
+			res.status(httpstatus.BAD_REQUEST);
+			res.send('Title is mandatory');
+		}
+		else {
+			book.save();
+			res.status(httpstatus.CREATED);
+			res.send("Record created successfully");
+			res.json(book);
+		}
+		/*book.save(function(err) {
 			if (err) {
-				res.send(httpstatus.INTERNAL_SERVER_ERROR).send(err);
+				res.status(httpstatus.INTERNAL_SERVER_ERROR);
+				res.send(err);
 			}
 			else {
 				res.status(httpstatus.CREATED).send('Record created successfully');
 				res.json(book);
 			}
-		});
+		});*/
 	};
 	var use = function(req, res, next) {
 		Book.findById(req.params.Id, function(err, book) {
@@ -40,9 +51,9 @@ var bookConroller = function(Book) {
 				next();
 			}
 			else {
-				res.send(httpstatus.NOT_FOUND).send('Book not found');
+				res.send(httpstatus.NOT_FOUND).send("Book not found");
 			}
-		})
+		});
 	};
 	var put = function(req, res) {
 		req.book.title = req.body.title;
@@ -83,9 +94,9 @@ var bookConroller = function(Book) {
 				res.status(httpstatus.INTERNAL_SERVER_ERROR).send(err);
 			}
 			else {
-				res.status(httpstatus.NO_CONTENT).send('Deleted successfully');
+				res.status(httpstatus.NO_CONTENT).send("Deleted successfully");
 			}
-		})
+		});
 	};
 	var getbyId = function(req, res) {
 		res.json(req.book);
