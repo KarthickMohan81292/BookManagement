@@ -1,14 +1,15 @@
-var express = require("express");
+const express = require('express');
+const bookControllerfn = require('../Controllers/bookController');
 
-var bookRouter = function (Book) {
-	var router = express.Router();
-	var bookController = require("../Controllers/bookController")(Book);
-	router.route("/books")
+const bookRouter = function bookRouter(Book) {
+	const router = express.Router();
+	const bookController = bookControllerfn(Book);
+	router.route('/books')
 		.get(bookController.get)
 		.post(bookController.post);
 
-	router.use("/books/:Id", bookController.use);
-	router.route("/books/:Id")
+	router.use('/books/:Id', bookController.use);
+	router.route('/books/:Id')
 		.get(bookController.getbyId)
 		.put(bookController.put)
 		.patch(bookController.patch)

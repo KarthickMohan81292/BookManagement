@@ -1,32 +1,30 @@
-var should = require('should'),
-    request = require('supertest'),
-    app = require('../app.js'),
-    mongoose = require('mongoose'),
-    Book = mongoose.model('Book'),
-    agent = request.agent(app),
-    httpstatus = require('http-status-codes');
+const should = require('should');
+const request = require('supertest');
+const app = require('../app.js');
+const mongoose = require('mongoose');
+const httpstatus = require('http-status-codes');
+const Book = require('../models/bookModel');
 
+const agent = request.agent(app);
 
-describe('Book Post test', function() {
-    it('Should allow a book to be posted and returns id', function(done) {
-        var bookPost = {
-            title: 'Test book',
-            author: 'Test author',
-            genre: 'Fiction'
-        };
-        agent.post('/api/books')
-            .send(bookPost)
-            .expect(httpstatus.CREATED)
-            .end(function(err, result) {
-                console.log(result);
-                result.body.should.have.property('_id');
-                result.body.read.should.equal(false);
-                done();
-            })
-    });
-    afterEach(function(done) {
-        Book.remove().exec();
-        done();
-    })
-})
-    
+describe('Book Post test', () => {
+	it('Should allow a book to be posted and returns id', (done) => {
+		const bookPost = {
+			title: 'Test book',
+			author: 'Test author',
+			genre: 'Fiction',
+		};
+		agent.post('/api/books')
+			.send(bookPost)
+			.expect(httpstatus.CREATED)
+			.end((err, result) => {
+				result.body.should.have.property('_id');
+				result.body.read.should.equal(false);
+				done();
+			});
+	});
+	afterEach((done) => {
+		Book.remove().exec();
+		done();
+	});
+});

@@ -1,29 +1,30 @@
-var mongoose = require('mongoose');
-var express = require("express");
-var bodyParser = require("body-parser");
-var config = require("./config");
-var app = express();
-var Book = require("./models/bookModel");
-var router = require("./Routes/bookRoutes")(Book);
-var db;
+const mongoose = require('mongoose');
+const express = require('express');
+const bodyParser = require('body-parser');
+const config = require('./config');
+
+const app = express();
+const Book = require('./models/bookModel');
+const router = require('./Routes/bookRoutes')(Book);
+
+
 if (config.env === 'Test') {
-	db = mongoose.connect('mongodb://localhost/bookAPI_Test');
+	mongoose.connect('mongodb://localhost/bookAPI_Test');
+} else {
+	mongoose.connect('mongodb://localhost/bookAPI');
 }
-else {
-	db = mongoose.connect('mongodb://localhost/bookAPI');	
-}
-var port = config.port;
+const { port } = config;
 
 
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use("/api", router);
+app.use('/api', router);
 
 
-app.listen(port, function() {
-	//console.log("Gulp running on port " + port);
+app.listen(port, () => {
+	// console.log("Gulp running on port " + port);
 });
-//console.log("Server listening on " + port);
+// console.log("Server listening on " + port);
 
 module.exports = app;
