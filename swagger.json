@@ -1,0 +1,239 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Book Management API",
+        "description": "Maintain book details for a library. Allows you to add/remove/update/get any book in the library"
+    },
+    "host": "localhost:3333",
+    "basePath": "/api",
+    "tags": [
+    {
+        "name": "Book",
+        "description": "API for books in the library"
+    }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+         "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/books": {
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Create new book in library",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Book object that needs to be added to the library",
+                        "example": {
+                            "title": "Harry Potter",
+                            "author": "J.K Rowling",
+                            "language": "English",
+                            "genre": "Fantasy",
+                            "price": "400",
+                            "read": false
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New book created successfully"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Gets all the books in the library",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "example": {
+                            "_id": "2dwdsdsd2",
+                            "title": "Harry Potter",
+                            "author": "J.K Rowling",
+                            "language": "English",
+                            "genre": "Fantasy",
+                            "price": "400",
+                            "read": false
+                        }  
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/books/{bookID}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get a specific book in the library",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "url",
+                        "description": "ID of the book in the library",
+                        "example": "2dwdsdsd2"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "example": {
+                            "_id": "2dwdsdsd2",
+                            "title": "Harry Potter",
+                            "author": "J.K Rowling",
+                            "language": "English",
+                            "genre": "Fantasy",
+                            "price": "400",
+                            "read": false
+                        }  
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Replaces book details of a book in the library",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "url",
+                        "description": "ID of the book in the library",
+                        "example": "2dwdsdsd2"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Book object that needs to be replaced in the library",
+                        "example": {
+                            "title": "Harry Potter Part 1",
+                            "author": "J.K Rowling",
+                            "language": "English",
+                            "genre": "Fantasy",
+                            "price": "350",
+                            "read": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "example": {
+                            "title": "Harry Potter",
+                            "author": "J.K Rowling",
+                            "language": "English",
+                            "genre": "Fantasy",
+                            "price": "400",
+                            "read": false
+                        }  
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Replaces attribute of a book in the library",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "url",
+                        "description": "ID of the book in the library",
+                        "example": "2dwdsdsd2"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Attributes of a book that needs to be updated in the library",
+                        "example": {
+                            "price": "350",
+                            "read": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "example": {
+                            "title": "Harry Potter",
+                            "author": "J.K Rowling",
+                            "language": "English",
+                            "genre": "Fantasy",
+                            "price": "400",
+                            "read": false
+                        }  
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Removes a book from the library",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "url",
+                        "description": "ID of the book in the library",
+                        "example": "2dwdsdsd2"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Book deleted successfully"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,19 +1,19 @@
 const express = require('express');
-const bookControllerfn = require('../Controllers/bookController');
+const bookControllerfn = require('../controllers/bookcontroller');
 
-const bookRouter = function bookRouter(Book) {
+const bookRouter = function bookRouter() {
 	const router = express.Router();
-	const bookController = bookControllerfn(Book);
+	const bookController = bookControllerfn();
 	router.route('/books')
-		.get(bookController.get)
-		.post(bookController.post);
+		.get(bookController.getBooks)
+		.post(bookController.addBook);
 
-	router.use('/books/:Id', bookController.use);
+	router.use('/books/:Id', bookController.findBook);
 	router.route('/books/:Id')
-		.get(bookController.getbyId)
-		.put(bookController.put)
-		.patch(bookController.patch)
-		.delete(bookController.deletefunction);
+		.get(bookController.getBookbyId)
+		.put(bookController.replaceBook)
+		.patch(bookController.updateBook)
+		.delete(bookController.removeBook);
 
 	return router;
 };

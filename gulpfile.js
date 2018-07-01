@@ -1,25 +1,29 @@
-var gulp = require("gulp"),
-	nodemon = require("gulp-nodemon"),
-	gulpMocha = require("gulp-mocha")
-	env = require("gulp-env"),
-	supertest = require("supertest");
+const gulp = require('gulp');
+const nodemon = require('gulp-nodemon');
+const gulpMocha = require('gulp-mocha');
+const istanbul = require('gulp-istanbul');
+const isparta = require('isparta');
 
-gulp.task('default', function() {
+gulp.task('default', () => {
 	nodemon({
 		script: 'app.js',
 		ext: 'js',
 		env: {
-			PORT: 3333
+			PORT: 3333,
 		},
-		ignore: ['./node_modules/**']
-	})
-	.on('restart', function() {
-		console.log("Server restarting");
-	})
-})
+		ignore: ['./node_modules/**'],
+	});
+});
 
-gulp.task('test', function() {
-	env({VARS: {ENV: 'Test'}});
-	gulp.src('tests/*.js', {read: false})
-		.pipe(gulpMocha({reporter: 'nyan'}));
-})
+gulp.task('pre-test', () => gulp.src(['lib/**/*.js'])
+	// Covering files
+	.pipe(istanbul({ instrumenter: isparta.Instrumenter }))
+	// Force `require` to return covered files
+	.pipe(istanbul.hookRequire()));
+
+gulp.task('test', ['pre-test'], () => {
+	process.env.ENV = 'Test';
+	gulp.src('tests/*.js', { read: false })
+		.pipe(gulpMocha({ reporter: 'nyan' }));
+});
+

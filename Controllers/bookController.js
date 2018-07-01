@@ -1,7 +1,8 @@
-const httpstatus = require('http-status-codes');
+const httpStatus = require('http-status-codes');
+const Book = require('../models/bookmodel');
 
-const bookConroller = function bookConroller(Book) {
-	const get = function get(req, res) {
+const bookConroller = function bookConroller() {
+	const getBooks = function getBooks(req, res) {
 		const query = {};
 		if (req.query.genre) {
 			query.genre = req.query.genre;
@@ -11,42 +12,42 @@ const bookConroller = function bookConroller(Book) {
 		}
 		Book.find(query, (err, books) => {
 			if (err) {
-				res.status(httpstatus.INTERNAL_SERVER_ERROR).send(err);
+				res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
 			} else {
-				res.json(books);
+				res.status(httpStatus.OK).send(books);
 			}
 		});
 	};
-	const post = function post(req, res) {
+	const addBook = function addBook(req, res) {
 		if (!req.body.title) {
-			res.status(httpstatus.BAD_REQUEST);
+			res.status(httpStatus.BAD_REQUEST);
 			res.send('Title is mandatory');
 		} else {
 			const book = new Book(req.body);
 			book.save((err) => {
 				if (err) {
-					res.status(httpstatus.INTERNAL_SERVER_ERROR);
+					res.status(httpStatus.INTERNAL_SERVER_ERROR);
 					res.send(err);
 				} else {
-					res.status(httpstatus.CREATED);
+					res.status(httpStatus.CREATED);
 					res.send(book);
 				}
 			});
 		}
 	};
-	const use = function use(req, res, next) {
+	const findBook = function findBook(req, res, next) {
 		Book.findById(req.params.Id, (err, book) => {
 			if (err) {
-				res.status(httpstatus.INTERNAL_SERVER_ERROR).send(err);
+				res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
 			} else if (book) {
 				req.book = book;
 				next();
 			} else {
-				res.status(httpstatus.NOT_FOUND).send('Book not found');
+				res.status(httpStatus.NOT_FOUND).send('Book not found');
 			}
 		});
 	};
-	const put = function put(req, res) {
+	const replaceBook = function replaceBook(req, res) {
 		req.book.title = req.body.title;
 		req.book.author = req.body.author;
 		req.book.price = req.body.price;
@@ -55,14 +56,13 @@ const bookConroller = function bookConroller(Book) {
 		req.book.language = req.body.language;
 		req.book.save((err) => {
 			if (err) {
-				res.status(httpstatus.INTERNAL_SERVER_ERROR).send(err);
+				res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
 			} else {
-				res.json(req.book);
+				res.status(httpStatus.OK).json(req.book);
 			}
 		});
-		res.json(req.book);
 	};
-	const patch = function patch(req, res) {
+	const updateBook = function updateBook(req, res) {
 		if (req.body._id) {
 			delete req.body._id;
 		}
@@ -71,33 +71,33 @@ const bookConroller = function bookConroller(Book) {
 		});
 		req.book.save((err) => {
 			if (err) {
-				res.status(httpstatus.INTERNAL_SERVER_ERROR).send(err);
+				res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
 			} else {
-				res.json(req.book);
+				res.status(httpStatus.OK).json(req.book);
 			}
 		});
 	};
-	const deletefunction = function deletefunction(req, res) {
+	const removeBook = function removeBook(req, res) {
 		req.book.remove((err) => {
 			if (err) {
-				res.status(httpstatus.INTERNAL_SERVER_ERROR).send(err);
+				res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
 			} else {
-				res.status(httpstatus.NO_CONTENT).send('Deleted successfully');
+				res.status(httpStatus.NO_CONTENT).send('Deleted successfully');
 			}
 		});
 	};
-	const getbyId = function getbyId(req, res) {
-		res.json(req.book);
+	const getBookbyId = function getBookbyId(req, res) {
+		res.status(httpStatus.OK).json(req.book);
 	};
 
 	return {
-		get,
-		post,
-		put,
-		patch,
-		use,
-		getbyId,
-		deletefunction,
+		getBooks,
+		addBook,
+		replaceBook,
+		updateBook,
+		findBook,
+		getBookbyId,
+		removeBook,
 	};
 };
 
